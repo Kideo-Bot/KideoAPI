@@ -49,7 +49,7 @@ class DbService {
         try {
             const response = new Promise((resolve, reject) => {
 
-                const query = `INSERT INTO test VALUES ('${options.ServerID}','${options.XP}')`;
+                const query = `INSERT INTO test VALUES ('${options.ServerID}','${options.XP}', '+')`;
 
                 this.con.query(query, (err, res) => {
 
@@ -100,6 +100,72 @@ class DbService {
         } catch (err) {
             console.log(err);
         }
+    }
+
+    /**
+     * @param ID {string}
+     * @return {Promise<JSON>}
+     */
+    async getDataWithID(ID){
+        try {
+
+            const response = new Promise((resolve, reject) => {
+
+                const query = `SELECT * FROM test WHERE ServerID = '${ID}'`;
+
+                this.con.query(query, (err, res) => {
+                    if(err) reject(new Error(err.message));
+
+                    resolve(res);
+                })
+
+            })
+
+            const json = JSON.stringify(await response);
+
+            return JSON.parse(json);
+
+        } catch (err) {
+            console.log(err);
+        }
+    }
+
+    /**
+     * @param newPrefix {string};
+     * @param guildID {string};
+     * @return {Promise<boolean>};
+     */
+    async changePrefix(newPrefix, guildID){
+
+        try {
+
+            const response = new Promise((resolve, reject) => {
+
+                if(newPrefix.length !== 1){
+                    resolve(false);
+                    return;
+                }
+
+                const query = `UPDATE test SET PREFIX='${newPrefix}' WHERE ServerID = '${guildID}'`;
+
+                this.con.query(query, (err, res) => {
+                    if(err) {
+                        reject(new Error(err.message));
+                        return;
+                    }
+
+                    resolve(true);
+
+                })
+
+            })
+
+            return response;
+
+        } catch (err) {
+            console.log(err);
+        }
+
     }
 
 }

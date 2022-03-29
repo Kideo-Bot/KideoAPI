@@ -12,6 +12,8 @@ const server = http.createServer((req, res) => {
         body+=chunk;
     }).on("end", async () => {
 
+        res.writeHead(200, {"Content-Type": "application/json"});
+
         if(req.method === "POST"){
             body = JSON.parse(body);
         }
@@ -20,17 +22,57 @@ const server = http.createServer((req, res) => {
             if(req.method === "POST"){
                 if(body.ServerID !== undefined || body.XP !== undefined){
                     if(await sql.createServer({ServerID: body.ServerID, XP: body.XP})){
-                        console.log("Server created !");
+                        res.end(JSON.stringify({message: "Server created in the table", succeed: true}))
+                    }else {
+                        res.end(JSON.stringify({message: "An error has current", succeed: false}))
                     }
                 }
             }
+
+            if(req.method === "GET"){
+                await sql.getAllData().then(data => {
+                    res.end(JSON.stringify({content: JSON.parse(data), succeed: true}))
+                }).catch(err => {
+                    console.log(err.message);
+                    res.end(JSON.stringify({message: "An error has current", succeed: false}));
+                })
+
+            }
+
         }
 
         if(req.url === "/api/deleteGuild"){
             if(req.method === "POST"){
                 if(body.ServerID !== undefined){
                     if(await sql.deleteGuildWithID(body.ServerID)){
-                        console.log("Server deleted !");
+                        res.end(JSON.stringify({message: "Server created in the table", succeed: true}))
+                    }else {
+                        res.end(JSON.stringify({message: "An error has current", succeed: false}))
+                    }
+                }
+            }
+        }
+
+        if(req.url === "/api/guildID"){
+            if(req.method === "POST"){
+                if(body.ServerID !== undefined){
+                    const guild = await sql.getDataWithID(body.ServerID);
+                    if(guild !== undefined){
+                        res.end(JSON.stringify({message: guild, succeed: true}));
+                    }else {
+                        res.end(JSON.stringify({message: "An error has current", succeed: false}));
+                    }
+                }
+            }
+        }
+
+        if(req.url === "/api/guildPrefix"){
+            if(req.method === "POST"){
+                if(body.ServerID !== undefined && body.Prefix !== undefined){
+                    if(await sql.changePrefix(body.Prefix, body.ServerID)){
+                        res.end(JSON.stringify({message: "Data sent", succeed: true}));
+                    }else {
+                        res.end(JSON.stringify({message: "An error has current", succeed: false}));
                     }
                 }
             }
