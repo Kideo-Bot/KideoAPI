@@ -21,7 +21,6 @@
   },
   "homepage": "https://github.com/Kideo-Bot/KideoAPI#readme",
   "devDependencies": {
-    "express": "^4.17.3",
     "mysql": "^2.18.1"
   }
 }
