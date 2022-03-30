@@ -25,7 +25,7 @@ class DbService {
     async getAllData(){
         try {
             const response = await new Promise((resolve, reject) => {
-                const query = `SELECT * FROM test`;
+                const query = `SELECT * FROM guild`;
 
                 this.con.query(query, (err, res) => {
                     if(err) reject(new Error(err.message));
@@ -49,7 +49,7 @@ class DbService {
         try {
             const response = new Promise((resolve, reject) => {
 
-                const query = `INSERT INTO test VALUES ('${options.ServerID}','${options.XP}', '+')`;
+                const query = `INSERT INTO guild VALUES ('${options.ServerID}','${options.XP}', '+')`;
 
                 this.con.query(query, (err, res) => {
 
@@ -80,7 +80,7 @@ class DbService {
         try {
             const response = new Promise((resolve, reject) => {
 
-                const query = `DELETE FROM test WHERE ServerID = '${guidID}'`;
+                const query = `DELETE FROM guild WHERE ServerID = '${guidID}'`;
 
                 this.con.query(query, (err, res) => {
 
@@ -111,7 +111,7 @@ class DbService {
 
             const response = new Promise((resolve, reject) => {
 
-                const query = `SELECT * FROM test WHERE ServerID = '${ID}'`;
+                const query = `SELECT * FROM guild WHERE ServerID = '${ID}'`;
 
                 this.con.query(query, (err, res) => {
                     if(err) reject(new Error(err.message));
@@ -146,7 +146,7 @@ class DbService {
                     return;
                 }
 
-                const query = `UPDATE test SET PREFIX='${newPrefix}' WHERE ServerID = '${guildID}'`;
+                const query = `UPDATE guild SET PREFIX='${newPrefix}' WHERE ServerID = '${guildID}'`;
 
                 this.con.query(query, (err, res) => {
                     if(err) {
@@ -161,6 +161,51 @@ class DbService {
             })
 
             return response;
+
+        } catch (err) {
+            console.log(err);
+        }
+
+    }
+
+    /**
+     * @param ServerID {string}
+     * @return {Promise<boolean>}
+     */
+    async addXpPoint(ServerID){
+
+        try {
+
+            const response = new Promise((resolve, reject) => {
+
+                const query2 = `SELECT EXP FROM guild WHERE ServerID = '${ServerID}'`;
+
+                this.con.query(query2, (err, number) => {
+                    if(err){
+                        reject(new Error(err.message));
+                    }
+
+                    let point = number[0].EXP + 1;
+
+                    const query = `UPDATE guild SET EXP = ${point} WHERE ServerID = '${ServerID}'`;
+
+                    this.con.query(query, (err, res) => {
+
+                        if(err){
+                            reject(new Error(err.message));
+                        }
+
+                        resolve(true);
+
+                    })
+
+                })
+
+
+
+            })
+
+            return !!response;
 
         } catch (err) {
             console.log(err);

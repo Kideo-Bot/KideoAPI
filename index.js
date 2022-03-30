@@ -78,6 +78,18 @@ const server = http.createServer((req, res) => {
             }
         }
 
+        if(req.url === "/api/xpGuild"){
+            if(req.method === "POST"){
+                if(body.ServerID !== undefined){
+                    if(await sql.addXpPoint(body.ServerID)){
+                        res.end(JSON.stringify({message: "Data sent", succeed: true}));
+                    }else {
+                        res.end(JSON.stringify({message: "An error has current", succeed: false}));
+                    }
+                }
+            }
+        }
+
     })
 
 }).listen({port: 5000, host: "0.0.0.0"}, () => {
