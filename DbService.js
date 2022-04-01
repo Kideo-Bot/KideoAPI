@@ -262,7 +262,7 @@ class DbService {
     async addLevel(ServerID) {
         try {
             const response = new Promise((resolve, reject) => {
-               const query = `SELECT * from guild WHERE ServerID='${ServerID}'`;
+               const query = `SELECT LEVEL from guild WHERE ServerID='${ServerID}'`;
 
                this.con.query(query, (err, number) => {
                    if(err) {
@@ -283,6 +283,8 @@ class DbService {
                });
 
             });
+
+            return !!response;
 
         } catch (err) {
             console.log(err);
