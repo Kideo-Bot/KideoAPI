@@ -191,9 +191,8 @@ class DbService {
 
                     const var1 = 120 * await this.getLevel(ServerID);
 
-                    if (point == var1) {
-                        this.addLevel(ServerID);
-                        console.log("Pourquoi ça ne fonctionne pas enculé ?")
+                    if (point === var1) {
+                        await this.addLevel(ServerID);
                     }
 
                     this.con.query(query, (err, res) => {
