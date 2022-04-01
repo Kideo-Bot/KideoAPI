@@ -49,7 +49,7 @@ class DbService {
         try {
             const response = new Promise((resolve, reject) => {
 
-                const query = `INSERT INTO guild VALUES ('${options.ServerID}','${options.XP}', '+')`;
+                const query = `INSERT INTO guild VALUES ('${options.ServerID}','${options.XP}', '+', 1)`;
 
                 this.con.query(query, (err, res) => {
 
