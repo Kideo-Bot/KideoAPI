@@ -3,7 +3,7 @@ const sql = require("mysql");
 class DbService {
     constructor() {
         this.con = sql.createConnection({
-            host: "localhost",
+            host: "0.0.0.0",
             port: 3306,
             database: "kideo",
             user: "root",
@@ -180,8 +180,8 @@ class DbService {
 
                 const query2 = `SELECT EXP FROM guild WHERE ServerID = '${ServerID}'`;
 
-                this.con.query(query2, (err, number) => {
-                    if(err){
+                this.con.query(query2, async (err, number) => {
+                    if (err) {
                         reject(new Error(err.message));
                     }
 
@@ -189,20 +189,22 @@ class DbService {
 
                     const query = `UPDATE guild SET EXP = ${point} WHERE ServerID = '${ServerID}'`;
 
+                    const var1 = 120 * await this.getLevel(ServerID);
+
+                    if (point == var1) {
+                        this.addLevel(ServerID);
+                        console.log("Pourquoi ça ne fonctionne pas enculé ?")
+                    }
+
                     this.con.query(query, (err, res) => {
 
-                        if(err){
+                        if (err) {
                             reject(new Error(err.message));
                         }
 
                         resolve(true);
-
                     })
-
                 })
-
-
-
             })
 
             return !!response;
@@ -211,6 +213,80 @@ class DbService {
             console.log(err);
         }
 
+    }
+
+    async getLevel(ServerID) {
+        try {
+            const response = new Promise((resolve, reject) => {
+
+                const query = `SELECT LEVEL from guild WHERE ServerID='${ServerID}'`;
+                this.con.query(query, (err, number) => {
+                   if(err) {
+                       reject(new Error(err.message));
+                   }
+                   resolve(number);
+                });
+            });
+
+
+
+            const data = await (await response)[0].LEVEL
+            return data;
+
+        } catch(err) {
+            console.log(err);
+        }
+    }
+
+    async getExperience(ServerID) {
+        try {
+            const response = new Promise((resolve, reject) => {
+
+                const query = `SELECT EXP from guild WHERE ServerID='${ServerID}'`;
+                this.con.query(query, (err, number) => {
+                    if(err) {
+                        reject(new Error(err.message));
+                    }
+                    resolve(number);
+                });
+            });
+
+            const data = await (await response)[0].EXP;
+            return data;
+
+        } catch(err) {
+            console.log(err);
+        }
+    }
+
+    async addLevel(ServerID) {
+        try {
+            const response = new Promise((resolve, reject) => {
+               const query = `SELECT * from guild WHERE ServerID='${ServerID}'`;
+
+               this.con.query(query, (err, number) => {
+                   if(err) {
+                       reject(new Error(err.message));
+                   }
+
+                   let newLevel = parseInt(number[0].LEVEL) + 1;
+
+                   const query2 = `UPDATE guild SET LEVEL = ${newLevel} where ServerID = '${ServerID}'`;
+
+                   this.con.query(query2, (err, res) => {
+                        if(err) {
+                            reject(new Error(err.message));
+                        }
+                        resolve(true);
+                   });
+
+               });
+
+            });
+
+        } catch (err) {
+            console.log(err);
+        }
     }
 
 }

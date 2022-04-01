@@ -90,6 +90,32 @@ const server = http.createServer((req, res) => {
             }
         }
 
+        if(req.url === "/api/getLevel") {
+            if(req.method = "POST") {
+                const number = await sql.getLevel(body.ServerID);
+                console.log(number)
+                if(number !== undefined)  {
+                    res.end(JSON.stringify({message: number, succeed: true}));
+                } else {
+                    res.end(JSON.stringify({message: "An error has current", succeed: false}));
+
+                }
+            }
+        }
+
+        if(req.url === "/api/getExperience") {
+            if(req.method = "POST") {
+                const number = await sql.getExperience(body.ServerID);
+                console.log(number);
+                if(number !== undefined)  {
+                    res.end(JSON.stringify({message: number, succeed: true}));
+                } else {
+                    res.end(JSON.stringify({message: "An error has current", succeed: false}));
+
+                }
+            }
+        }
+
     })
 
 }).listen({port: 5000, host: "0.0.0.0"}, () => {
