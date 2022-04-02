@@ -2,13 +2,16 @@ const sql = require("mysql");
 
 class DbService {
     constructor() {
+
         this.con = sql.createConnection({
-            host: "0.0.0.0",
-            port: 3306,
+            user: "kideoOwner",
+            password: "01042022",
             database: "kideo",
-            user: "root",
-            password: ""
-        });
+            port: 3306,
+            host: "82.66.14.233"
+        })
+
+
 
         this.con.connect((err) => {
             if(err){
@@ -16,6 +19,7 @@ class DbService {
             }
             console.log('db ' + this.con.state);
         })
+
     }
 
     /**
@@ -24,10 +28,11 @@ class DbService {
      */
     async getAllData(){
         try {
-            const response = await new Promise((resolve, reject) => {
+
+            const response = await new Promise(async (resolve, reject) => {
                 const query = `SELECT * FROM guild`;
 
-                this.con.query(query, (err, res) => {
+                await this.con.query(query, (err, res) => {
                     if(err) reject(new Error(err.message));
 
                     resolve(res);
@@ -47,7 +52,8 @@ class DbService {
      */
     async createServer(options){
         try {
-            const response = new Promise((resolve, reject) => {
+
+            const response = new Promise(async (resolve, reject) => {
 
                 const query = `INSERT INTO guild VALUES ('${options.ServerID}','${options.XP}', '+', 1)`;
 
@@ -78,6 +84,7 @@ class DbService {
      */
     async deleteGuildWithID(guidID){
         try {
+
             const response = new Promise((resolve, reject) => {
 
                 const query = `DELETE FROM guild WHERE ServerID = '${guidID}'`;

@@ -20,7 +20,7 @@
     "url": "https://github.com/Kideo-Bot/KideoAPI/issues"
   },
   "homepage": "https://github.com/Kideo-Bot/KideoAPI#readme",
-  "devDependencies": {
+  "dependencies": {
     "mysql": "^2.18.1"
   }
 }
