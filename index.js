@@ -114,6 +114,34 @@ const server = http.createServer((req, res) => {
             }
         }
 
+        if(req.url === "/api/setUserWarns"){
+            if(req.method === "POST"){
+                if(body.USERID !== undefined && body.WARNSNUMBER !== undefined){
+                    const response = await sql.setWarns(body.USERID, body.WARNSNUMBER)
+
+                    if(response){
+                        res.end(JSON.stringify({message: "Data sent", succeed: true}))
+                    }else {
+                        res.end(JSON.stringify({message: "There is a problem", succeed: false}))
+                    }
+                }
+            }
+        }
+
+        if(req.url === "/api/getUserWarns"){
+            if(req.method === "POST"){
+                if(body.USERID !== undefined){
+                    const response = await sql.getWarns(body.USERID)
+
+                    if(response){
+                        res.end(JSON.stringify({message: response, succeed: true}))
+                    }else {
+                        res.end(JSON.stringify({message: "There is a problem", succeed: false}))
+                    }
+                }
+            }
+        }
+
     })
 
 }).listen({port: 5000, host: "0.0.0.0"}, () => {

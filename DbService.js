@@ -297,6 +297,60 @@ class DbService {
         }
     }
 
+    async getWarns(UserID){
+
+        try {
+
+            return new Promise(async (resolve, reject) => {
+
+                const query = `SELECT WARNS from userwarns WHERE USERID='${UserID}'`;
+
+                this.con.query(query, (err, number) => {
+                    if(err){
+                        reject(err);
+                        return;
+                    }
+
+                    resolve(number);
+
+                })
+
+            })
+
+        } catch (err) {
+
+        }
+
+
+    }
+
+    async setWarns(UserID, number){
+
+        try {
+
+            return !!new Promise(async (resolve, reject) => {
+
+                const query = `UPDATE userwarns SET WARNS = ${number} where USERID = '${UserID}'`;
+
+                this.con.query(query, (err, number) => {
+                    if(err){
+                        reject(err);
+                        return;
+                    }
+
+                    resolve(number);
+
+                })
+
+            })
+
+        } catch (err) {
+
+        }
+
+
+    }
+
 }
 
 module.exports = DbService;
