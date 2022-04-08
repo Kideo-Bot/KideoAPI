@@ -14,7 +14,7 @@ const server = http.createServer((req, res) => {
 
         res.writeHead(200, {"Content-Type": "application/json"});
 
-        if(req.method === "POST"){
+        if(req.method === "POST" && body !== ""){
             body = JSON.parse(body);
         }
 
@@ -134,9 +134,9 @@ const server = http.createServer((req, res) => {
                     const response = await sql.getWarns(body.USERID)
 
                     if(response){
-                        res.end(JSON.stringify({message: response, succeed: true}))
+                        res.end(JSON.stringify({message: response, succeed: true}));
                     }else {
-                        res.end(JSON.stringify({message: "There is a problem", succeed: false}))
+                        res.end(JSON.stringify({message: "There is a problem", succeed: false}));
                     }
                 }
             }

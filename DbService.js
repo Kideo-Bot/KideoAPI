@@ -303,7 +303,7 @@ class DbService {
 
             return new Promise(async (resolve, reject) => {
 
-                const query = `SELECT WARNS from userwarns WHERE USERID='${UserID}'`;
+                const query = `SELECT WARNS from userwarn WHERE USERID='${UserID}'`;
 
                 this.con.query(query, (err, number) => {
                     if(err){
@@ -311,7 +311,7 @@ class DbService {
                         return;
                     }
 
-                    resolve(number);
+                    resolve(number[0].WARNS);
 
                 })
 
@@ -330,7 +330,7 @@ class DbService {
 
             return !!new Promise(async (resolve, reject) => {
 
-                const query = `UPDATE userwarns SET WARNS = ${number} where USERID = '${UserID}'`;
+                const query = `UPDATE userwarn SET WARNS = ${number} where USERID = '${UserID}'`;
 
                 this.con.query(query, (err, number) => {
                     if(err){
