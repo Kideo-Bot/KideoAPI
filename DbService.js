@@ -1,14 +1,16 @@
 const sql = require("mysql");
 
+const config = require("./config.json")
+
 class DbService {
     constructor() {
 
         this.con = sql.createConnection({
-            user: "kideoOwner",
-            password: "01042022",
-            database: "kideo",
+            user: config.user,
+            password: config.password,
+            database: config.database,
             port: 3306,
-            host: "82.66.14.233"
+            host: config.host
         })
 
 

@@ -107,3 +107,5 @@ dist
 .idea/
 
 start.bat
+
+config.json
