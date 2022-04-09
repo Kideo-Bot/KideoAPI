@@ -112,12 +112,28 @@ const server = http.createServer((req, res) => {
 
                 }
             }
+        }   
+
+        if(req.url === "/api/getUserWarns"){
+            if(req.method === "POST"){
+                if(body.USERID !== undefined && body.GUILDID !== undefined){
+                    const response = await sql.getWarns(body.USERID, body.GUILDID)
+
+                    if(response !== false){
+                        res.end(JSON.stringify({message: response, succeed: true}));
+                    }else {
+                        res.end(JSON.stringify({message: "There is a problem", succeed: false}));
+                    }
+                }
+            }
         }
 
         if(req.url === "/api/setUserWarns"){
             if(req.method === "POST"){
-                if(body.USERID !== undefined && body.WARNSNUMBER !== undefined){
-                    const response = await sql.setWarns(body.USERID, body.WARNSNUMBER)
+
+                if(body.USERID !== undefined && body.GUILDID){
+
+                    const response = await sql.createWarnsUser(body.USERID, body.GUILDID)
 
                     if(response){
                         res.end(JSON.stringify({message: "Data sent", succeed: true}))
@@ -128,19 +144,35 @@ const server = http.createServer((req, res) => {
             }
         }
 
-        if(req.url === "/api/getUserWarns"){
+        if(req.url === "/api/modifyUserWarns"){
             if(req.method === "POST"){
-                if(body.USERID !== undefined){
-                    const response = await sql.getWarns(body.USERID)
+                if(body.USERID !== undefined && body.WARNSNUMBER !== undefined && body.GUILDID !== undefined){
+                    const response = await sql.setWarns(body.USERID, body.WARNSNUMBER, body.GUILDID)
 
                     if(response){
-                        res.end(JSON.stringify({message: response, succeed: true}));
+                        res.end(JSON.stringify({message: "Data sent", succeed: true}))
+                    }else {
+                        res.end(JSON.stringify({message: "There is a problem", succeed: false}))
+                    }
+                }
+            }
+        }
+
+        if(req.url === "/api/deleteUserWarns"){
+            if(req.method === "POST"){
+                if(body.USERID !== undefined && body.GUILDID){
+                    const response = await sql.deleteWarnsUser(body.USERID, body.GUILDID)
+
+                    if(response !== false){
+                        res.end(JSON.stringify({message: "Data sent", succeed: true}));
                     }else {
                         res.end(JSON.stringify({message: "There is a problem", succeed: false}));
                     }
                 }
             }
         }
+
+
 
     })
 

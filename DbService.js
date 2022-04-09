@@ -297,22 +297,25 @@ class DbService {
         }
     }
 
-    async getWarns(UserID){
+    async getWarns(UserID, GuildID){
 
         try {
 
             return new Promise(async (resolve, reject) => {
 
-                const query = `SELECT WARNS from userwarn WHERE USERID='${UserID}'`;
+                const query = `SELECT WARNS FROM userwarn WHERE USERID='${UserID}' AND GUILDID = '${GuildID}'`;
 
                 this.con.query(query, (err, number) => {
                     if(err){
                         reject(err);
                         return;
                     }
-
-                    resolve(number[0].WARNS);
-
+                    
+                    if(number[0] === undefined){
+                        resolve(false)
+                    }else {
+                        resolve(number[0].WARNS);
+                    }
                 })
 
             })
@@ -324,13 +327,13 @@ class DbService {
 
     }
 
-    async setWarns(UserID, number){
+    async setWarns(UserID, number, GuildID){
 
         try {
 
             return !!new Promise(async (resolve, reject) => {
 
-                const query = `UPDATE userwarn SET WARNS = ${number} where USERID = '${UserID}'`;
+                const query = `UPDATE userwarn SET WARNS = ${number} WHERE USERID = '${UserID}' AND GUILDID = '${GuildID}'`;
 
                 this.con.query(query, (err, number) => {
                     if(err){
@@ -351,6 +354,53 @@ class DbService {
 
     }
 
+    async createWarnsUser(UserID, GuildID){
+        try {
+
+            return !!new Promise(async (resolve, reject) => {
+
+                const query = `INSERT INTO userwarn VALUES ('${UserID}','1', '${GuildID}')`;
+
+                this.con.query(query, (err, number) => {
+                    if(err){
+                        reject(err);
+                        return;
+                    }
+
+                    resolve(number);
+
+                })
+
+            })
+
+        } catch (err) {
+
+        }
+    }
+    
+    async deleteWarnsUser(UserID, GuildID){
+        try {
+
+            return !!new Promise(async (resolve, reject) => {
+
+                const query = `DELETE FROM userwarn WHERE USERID = '${UserID}' AND GUILDID = '${GuildID}'`;
+
+                this.con.query(query, (err, number) => {
+                    if(err){
+                        reject(err);
+                        return;
+                    }
+
+                    resolve(number);
+
+                })
+
+            })
+
+        } catch (err) {
+
+        }
+    }
 }
 
 module.exports = DbService;
