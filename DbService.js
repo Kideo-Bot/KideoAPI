@@ -403,6 +403,142 @@ class DbService {
 
         }
     }
+
+    async getUserTempMute(UserID, GuildID){
+
+        try {
+
+            return new Promise(async (resolve, reject) => {
+
+                const query = `SELECT TIME FROM usertempmute WHERE USERID='${UserID}' AND GUILDID = '${GuildID}'`;
+
+                this.con.query(query, (err, number) => {
+                    if(err){
+                        reject(err);
+                        return;
+                    }
+                    
+                    if(number[0] === undefined){
+                        resolve(false)
+                    }else {
+                        resolve(number[0].TIME);
+                    }
+                })
+
+            })
+
+        } catch (err) {
+
+        }
+
+
+    }
+
+    async setUserTempMute(UserID, number, GuildID){
+
+        try {
+
+            return !!new Promise(async (resolve, reject) => {
+
+                const query = `UPDATE usertempmute SET TIME = ${number} WHERE USERID = '${UserID}' AND GUILDID = '${GuildID}'`;
+
+                this.con.query(query, (err, number) => {
+                    if(err){
+                        reject(err);
+                        return;
+                    }
+
+                    resolve(number);
+
+                })
+
+            })
+
+        } catch (err) {
+
+        }
+
+
+    }
+
+    async createUserTempMute(UserID, GuildID, Time){
+        try {
+
+            return !!new Promise(async (resolve, reject) => {
+
+                const query = `INSERT INTO usertempmute VALUES ('${UserID}','${GuildID}','${Time}')`;
+
+                this.con.query(query, (err, number) => {
+                    if(err){
+                        reject(err);
+                        return;
+                    }
+
+                    resolve(number);
+
+                })
+
+            })
+
+        } catch (err) {
+
+        }
+    }
+    
+    async deleteUserTempMute(UserID, GuildID){
+        try {
+
+            return !!new Promise(async (resolve, reject) => {
+
+                const query = `DELETE FROM usertempmute WHERE USERID = '${UserID}' AND GUILDID = '${GuildID}'`;
+
+                this.con.query(query, (err, number) => {
+                    if(err){
+                        reject(err);
+                        return;
+                    }
+
+                    resolve(number);
+
+                })
+
+            })
+
+        } catch (err) {
+
+        }
+    }
+
+    async getUsersTempMute(){
+
+        try {
+
+            return new Promise(async (resolve, reject) => {
+
+                const query = `SELECT * FROM usertempmute`;
+
+                this.con.query(query, (err, number) => {
+                    if(err){
+                        reject(err);
+                        return;
+                    }
+                    
+                    if(number[0] === undefined){
+                        resolve(false)
+                    }else {
+                        resolve(number);
+                    }
+                })
+
+            })
+
+        } catch (err) {
+
+        }
+
+
+    }
+
 }
 
 module.exports = DbService;

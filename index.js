@@ -131,7 +131,7 @@ const server = http.createServer((req, res) => {
         if(req.url === "/api/setUserWarns"){
             if(req.method === "POST"){
 
-                if(body.USERID !== undefined && body.GUILDID){
+                if(body.USERID !== undefined && body.GUILDID !== undefined){
 
                     const response = await sql.createWarnsUser(body.USERID, body.GUILDID)
 
@@ -169,6 +169,77 @@ const server = http.createServer((req, res) => {
                         res.end(JSON.stringify({message: "There is a problem", succeed: false}));
                     }
                 }
+            }
+        }
+
+        if(req.url === "/api/getUserTempMute"){
+            if(req.method === "POST"){
+                if(body.USERID !== undefined && body.GUILDID !== undefined){
+                    const response = await sql.getUserTempMute(body.USERID, body.GUILDID)
+
+                    if(response !== false){
+                        res.end(JSON.stringify({message: response, succeed: true}));
+                    }else {
+                        res.end(JSON.stringify({message: "There is a problem", succeed: false}));
+                    }
+                }
+            }
+        }
+
+        if(req.url === "/api/setUserTempMute"){
+            if(req.method === "POST"){
+
+                if(body.USERID !== undefined && body.GUILDID !== undefined && body.TIME !== undefined){
+
+                    const response = await sql.createUserTempMute(body.USERID, body.GUILDID, body.TIME)
+
+                    if(response){
+                        res.end(JSON.stringify({message: "Data sent", succeed: true}))
+                    }else {
+                        res.end(JSON.stringify({message: "There is a problem", succeed: false}))
+                    }
+                }
+            }
+        }
+
+        if(req.url === "/api/modifyUserTempMute"){
+            if(req.method === "POST"){
+                if(body.USERID !== undefined && body.WARNSNUMBER !== undefined && body.GUILDID !== undefined){
+                    const response = await sql.setUserTempMute(body.USERID, body.TIME, body.GUILDID)
+
+                    if(response){
+                        res.end(JSON.stringify({message: "Data sent", succeed: true}))
+                    }else {
+                        res.end(JSON.stringify({message: "There is a problem", succeed: false}))
+                    }
+                }
+            }
+        }
+
+        if(req.url === "/api/deleteUserTempMute"){
+            if(req.method === "POST"){
+                if(body.USERID !== undefined && body.GUILDID){
+                    const response = await sql.deleteUserTempMute(body.USERID, body.GUILDID)
+
+                    if(response !== false){
+                        res.end(JSON.stringify({message: "Data sent", succeed: true}));
+                    }else {
+                        res.end(JSON.stringify({message: "There is a problem", succeed: false}));
+                    }
+                }
+            }
+        }
+
+        if(req.url === "/api/getUsersTempMute"){
+            if(req.method === "GET"){
+                const response = await sql.getUsersTempMute()
+
+                if(response !== false){
+                    res.end(JSON.stringify({message: response, succeed: true}));
+                }else {
+                    res.end(JSON.stringify({message: "There is a problem", succeed: false}));
+                }
+
             }
         }
 
