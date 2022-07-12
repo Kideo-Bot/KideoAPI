@@ -6,8 +6,8 @@ class DbService {
     constructor() {
 
         this.con = sql.createConnection({
-            user: config.user,
-            password: config.password,
+            user: "root",
+            password: "",
             database: config.database,
             port: 3306,
             host: config.host
